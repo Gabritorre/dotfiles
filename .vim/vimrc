@@ -1,0 +1,226 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Sections:
+"    -> General
+"    -> VIM user interface
+"    -> Colors and Fonts
+"    -> Text, tab and indent related
+"    -> Visual mode related
+"    -> Moving around, tabs and buffers
+"    -> Status line
+"    -> Automations
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => General
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Sets how many lines of history VIM has to remember
+set history=500
+
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+
+call plug#begin()
+Plug 'Gabritorre/vim-deep-space'
+Plug 'itchyny/lightline.vim'
+
+Plug 'google/vim-searchindex'
+call plug#end()
+
+"comments will be written in italic
+let g:deepspace_italics=1
+
+" show number of occurrences when search in format [x/y]
+set shortmess-=S
+let g:searchindex_line_limit=100000
+
+" autosave when focus lost
+:au FocusLost * silent! wa
+
+" With a map leader it's possible to do extra key combinations.
+" Works only within 1 sec after <leader> is pressed
+let mapleader = ","
+
+" Show partial commands in the last line of the screen
+set showcmd
+
+" Fast saving
+nmap <leader>w :w!<cr>
+
+" :W sudo saves the file
+command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" show line number
+set number
+
+" highlight cursorline
+set cursorline
+
+" Set 5 lines to the cursor - when moving vertically using j/k
+set scrolloff=5
+
+" new vertical  panes will open on right
+set splitright
+
+" new horizontal panes will open below
+set splitbelow
+
+" Turn on the Wild menu
+set wildmenu
+
+" Always show current cursor position
+set ruler
+
+" Height of the command bar
+set cmdheight=1
+
+" A buffer becomes hidden when it is abandoned
+set hidden
+
+" Show tabs
+set list
+set listchars=tab:\┊\ ,extends:»,precedes:«,nbsp:⎵
+
+" Configure backspace so it is be able to delete everything
+set backspace=eol,start,indent
+
+"'<' and '>' left/right keys in normal and visual mode. '[' and ']' left/right keys in insert and replace mode.
+set whichwrap+=<,>,[,],h,l
+
+" Ignore case when searching
+set ignorecase
+
+" When searching try to be smart about cases
+set smartcase
+
+" Highlight search results
+set hlsearch
+
+" Makes search dinamically highlight words
+set incsearch
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+
+" Show trailing whitespaces (this must stay behind 'colorscheme' command to take effect)
+autocmd ColorScheme * highlight WhiteSpaces ctermbg=red guibg=#cc6666
+autocmd InsertEnter,InsertLeave,BufWinEnter * match WhiteSpaces /\s\+$/
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable syntax highlighting
+syntax enable
+
+if &t_Co >= 256
+	set termguicolors
+endif
+
+set background=dark
+set termguicolors
+colorscheme deep-space
+
+let g:lightline = {
+      \ 'colorscheme': 'deepspace',
+      \ }
+
+" Set utf8 as standard encoding
+set encoding=utf8
+
+" Use Unix as the standard file type
+set ffs=unix
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" 1 tab == 4 spaces
+set shiftwidth=4
+set tabstop=4
+
+" Linebreak
+set linebreak
+
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
+
+""""""""""""""""""""""""""""""
+" => Visual mode related
+""""""""""""""""""""""""""""""
+" Visual mode pressing * searches for the current selection
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Moving around, tabs, windows and buffers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map <Space> to / (search)
+map <space> /
+
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :noh<cr>
+
+" Smart way to move between windows with ctrl + hjkl
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+map <leader>l :bnext<cr>
+map <leader>h :bprevious<cr>
+
+" Useful mappings for managing tabs
+map <leader>tn :tabnew<cr>
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+map <leader>t<leader> :tabnext<CR>
+
+" Let 'tl' toggle between this and the last accessed tab
+let g:lasttab = 1
+nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
+au TabLeave * let g:lasttab = tabpagenr()
+
+" Opens a new tab with the current buffer's path
+" Super useful when editing files in the same directory
+map <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/
+
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+
+" Format the status line (without lightline)
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+
+" Specify the behavior when switching between buffers
+try
+  set switchbuf=useopen,usetab,newtab
+  set stal=2
+catch
+endtry
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Automations
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Delete trailing white space on save
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+
+if has("autocmd")
+    autocmd BufWritePre *.txt,*.rs,*.java,*.js,*.c,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+endif
+
+" Return to last edit position when opening files
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
