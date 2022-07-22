@@ -141,6 +141,7 @@ set ffs=unix
 " 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
+set noexpandtab
 
 " Linebreak
 set linebreak
@@ -224,3 +225,5 @@ endif
 " Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+" force rust to use tabs instead of spaces
+autocmd FileType rust setlocal noexpandtab
