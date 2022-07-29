@@ -25,6 +25,7 @@ Plug 'Gabritorre/vim-deep-space'
 Plug 'itchyny/lightline.vim'
 
 Plug 'google/vim-searchindex'
+Plug 'manasthakur/vim-commentor'
 call plug#end()
 
 "comments will be written in italic
@@ -227,3 +228,11 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 " force rust to use tabs instead of spaces
 autocmd FileType rust setlocal noexpandtab
+
+" Ctrl + 7 to comment line toggle
+nmap <C-_> <Plug>CommentorLine
+nmap gcc <Plug>CommentorLine
+
+" gc for general comment (gc <movement>) (<visual> gc)
+nmap gc <Plug>Commentor
+xmap gc <Plug>Commentor
