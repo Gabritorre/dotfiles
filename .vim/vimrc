@@ -147,8 +147,8 @@ set noexpandtab
 " Linebreak
 set linebreak
 
-set ai "Auto indent
-set si "Smart indent
+set autoindent "Auto indent
+set smartindent "Smart indent
 set wrap "Wrap lines
 
 """"""""""""""""""""""""""""""
@@ -162,6 +162,9 @@ vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Map <Space> to / (search)
 map <space> /
+
+"add a closing } when type { and press enter
+inoremap {<CR> {<CR>}<Esc>O
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
