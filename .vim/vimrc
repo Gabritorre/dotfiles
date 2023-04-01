@@ -82,6 +82,9 @@ set cmdheight=1
 " A buffer becomes hidden when it is abandoned
 set hidden
 
+" Disable the default mode indicator
+set noshowmode
+
 " Show tabs
 set list
 set listchars=tab:\┊\ ,extends:»,precedes:«,nbsp:⎵
