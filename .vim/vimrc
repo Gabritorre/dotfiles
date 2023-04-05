@@ -3,6 +3,7 @@
 "    -> General
 "    -> VIM user interface
 "    -> Colors and Fonts
+"    -> File browser
 "    -> Text, tab and indent related
 "    -> Visual mode related
 "    -> Moving around, tabs and buffers
@@ -13,8 +14,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Sets how many lines of history VIM has to remember
-set history=500
+
 
 " Enable filetype plugins
 filetype plugin on
@@ -27,6 +27,13 @@ Plug 'itchyny/lightline.vim'
 Plug 'google/vim-searchindex'
 Plug 'manasthakur/vim-commentor'
 call plug#end()
+
+
+" Sets how many lines of history VIM has to remember
+set history=500
+
+" make the search of a file recursive in folders when use command 'file'
+set path+=**
 
 "comments will be written in italic
 let g:deepspace_italics=1
@@ -70,7 +77,7 @@ set splitright
 " new horizontal panes will open below
 set splitbelow
 
-" Turn on the Wild menu
+" show up a menu when use tab completition in vim commands
 set wildmenu
 
 " Always show current cursor position
@@ -137,6 +144,18 @@ set encoding=utf8
 
 " Use Unix as the standard file type
 set ffs=unix
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => File browser
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" remove the banner
+let g:netrw_banner=0
+
+" use tree visual mode
+let g:netrw_liststyle=3
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -242,3 +261,10 @@ nmap gcc <Plug>CommentorLine
 " gc for general comment (gc <movement>) (<visual> gc)
 nmap gc <Plug>Commentor
 xmap gc <Plug>Commentor
+
+" insert a C++ template
+nnoremap \cpp<CR> :-1read $HOME/.vim/templates/cpp.cpp<CR>4jo
+
+" insert a C template
+nnoremap \c<CR> :-1read $HOME/.vim/templates/c.c<CR>4jo
+
