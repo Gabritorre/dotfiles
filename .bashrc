@@ -43,5 +43,5 @@ else
   export PROMPT_COMMAND=set-window-title
 fi
 
-PATH="~/.ssh:${PATH}"
+PATH="~/.local/bin/:${PATH}"
 export PATH
