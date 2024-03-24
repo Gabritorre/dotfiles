@@ -25,12 +25,14 @@ if [ -d ~/.bashrc.d ]; then
 fi
 
 unset rc
-
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
 #PROMPT STYLE
 #ANSI:
 #PS1="\e[1;34m\u@\h:\e[0m \e[1;37m\W/\e[0m \$ "
 #Bash:
-PS1="\[\033[01;34m\]\u@\h:\[\033[0m\] \[\033[01;37m\]\W/\[\033[0m\] \$ "
+PS1="\[\033[01;34m\]\u@\h:\[\033[0m\] \[\033[01;37m\]\W\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
 
 # update window name
 set-window-title() {
